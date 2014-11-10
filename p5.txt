@@ -297,15 +297,35 @@ Captura una sesión SIP de una conversación con el número SIP sip:9999@qxip.ne
 
 17. Observa las diferencias en el inicio de la conversación entre el entorno del laboratorio y el del ejercicio anterior:
  ** ¿Es necesario el uso de DNS y STUN? ¿Por qué?
+
+Sí, hay paquetes DNS y STUN. Se utiliza DNS para la resolución de nombres de las máquinas y STUN porque estamos bajo ip's privadas, tras un router NAT.
+
  ** ¿Son diferentes el registro y la descripción de la sesión?
+
+Según lo que puedo apreciar son bastante iguales.
 
 
 18. Identifica las diferencias existentes entre esta conversación y la conversación anterior:
  ** ¿Cuántos flujos tenemos?
+
+2, ambos de Audio (G.711).
+
  ** ¿Cuál es su periodicidad?
+
+Es la misma (20 ms por paquete), dado que se envían 160 bytes por paquete al igual que antes.
+
  ** ¿Cuánto es el valor máximo del delta y los valores medios y máximo del jitter?
+
+Flujo Audio 1: Max delta = 24.73 ms, Max Jitter = 0.91 ms, Jitter Medio = 0.43 ms
+Flujo Audio 2: Max delta = 24.59 ms, Max Jitter = 1.14 ms, Jitter Medio = 0.41 ms
+
  ** ¿Podrías reproducir la conversación desde Wireshark? ¿Cómo? Comprueba que poniendo un valor demasiado pequeño para el buffer de jitter, la conversación puede no tener la calidad necesaria.
+
+Sí, en el menú Telephony, RTP, Show All Streams, seleccionar un flujo y pulsar Analyze, y en la siguiente ventana pulsar Player. Aunque no funcione, debería salir el espectro del audio pulsando View as time of day.
+
  ** ¿Sabrías decir qué tipo de servicio ofrece sip:9999@qxip.net?
+
+Ofrece servicio de Audio únicamente.
 
 
 
