@@ -128,36 +128,92 @@ INVITE, ACK, OPTIONS, BYE, CANCEL, NOTIFY, REFER, MESSAGE
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
+
 9. Fijémonos en las tramas siguientes a la número 46:
  ** ¿Se registra con éxito en el primer intento?
- ** ¿Cómo sabemos si el registro se ha realizado correctamente o no?
+
+No 
+
+** ¿Cómo sabemos si el registro se ha realizado correctamente o no?
+
+Porque debemos recibir un 200 OK del servidor.
+
  ** ¿Podrías identificar las diferencias entre el primer intento y el segundo de registro? (fíjate en el tamaño de los paquetes y mira a qué se debe el cambio)
+
+Tras recibir una respuesta del servidor diciendo que no está autorizado, se reenvía un Register igual que el primero pero añadiendo el campo Authorization, de forma que ahora tendrá 712 bytes en vez de 523.
+
  ** ¿Cuánto es el valor del tiempo de expiración de la sesión? Indica las unidades.
+
+3600 segundos
 
 
 10. Una vez registrados, podemos efectuar una llamada. Vamos a probar con el servicio de eco de Ekiga que nos permite comprobar si nos hemos conectado correctamente. El servicio de eco tiene la dirección sip:500@ekiga.net. Veamos el INVITE de cerca.
  ** ¿Puede verse el nombre del que efectúa la llamada, así como su dirección SIP?
+
+Sí, en el paquete nº 84 dirigido a la dirección sip:500@ekiga.net, observamos un campo From con esa información ("Gregorio Robles\ <sip:grex@ekiga.net>)
+
  ** ¿Qué es lo que contiene el cuerpo de la trama? ¿En qué formato/protocolo está?
+
+Contiene la información en formato SDP (Owner/creator, Session ID, Owner address, Session name, Connection Information, Media description...)
+
  ** ¿Tiene éxito el primer intento? ¿Cómo lo sabes?
+
+No, el servidor le contesta diciendo que requiere autorización de proxy.
+Se vuelve a enviar un Invite en el paquete 103, y esta vez obtiene como respuesta un 200 OK.
+
  ** ¿En qué se diferencia el segundo INVITE más abajo del primero? ¿A qué crees que se debe esto?
+
+El segundo Invite cuenta con el campo Proxy-Authorization añadido, cumpliendo así los requisitos del servidor.
 
 
 11. Una vez conectado, estudia el intercambio de tramas.
  ** ¿Qué protocolo(s) se utiliza(n)? ¿Para qué sirven estos protocolos?
+
+RTP y RTCP
+
  ** ¿Cuál es el tamaño de paquete de los mismos?
+
+214 para RTP y 102 para RTCP
+
  ** ¿Se utilizan bits de padding?
+
+No, el campo padding tiene valor False (0)
+
  ** ¿Cuál es la periodicidad de los paquetes que se envían?
+
+Atendiendo al campo TimeStamp vemos que el primer byte de cada mensaje RTP se envía cada 160 ms (Aunque no se refleje luego en el tiempo real de los paquetes, dado que, como veremos después, existe jitter)
+
+En los paquetes RTCP no observo una periodicidad fija.
+
  ** ¿Cuántos bits/segundo estamos enviando?
 
+Si consideramos el periodo anterior (0.000160 seg), y que 214 bytes = 1712 bits: 10700000 bits/seg
 
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
 12. Vamos a ver más a fondo el intercambio RTP. En Telephony hay una opción RTP. Empecemos mirando los flujos RTP.
  ** ¿Cuántos flujos hay? ¿por qué?
+
+Hay 2, vídeo y audio; uno al puerto 5014 de paquetes H.261 (ITU-T video compression standard), y otro al 5010 de paquetes G.711 (estándar de la ITU-T para la codificación de audio)
+
  ** ¿Cuántos paquetes se pierden?
+
+0, ninguno
+
  ** ¿Cuál es el valor máximo del delta? ¿Y qué es lo que significa el valor de delta?
+
+1290.48 y 1290.44 ms
+
+Es la latencia, o tiempo que tarda de ir desde un punto origen hasta un punto destino.
+
  ** ¿Cuáles son los valores de jitter (medio y máximo)? ¿Qué quiere decir eso? ¿Estamos ante una conversación de calidad?
+
+V. Medio: 153.24 y 42.50
+V. máximo: 183.10 y 119.64 ms
+
+"Jitter is the deviation from true periodicity of a presumed periodic signal"
+Lo que significa que es lo que provoca que la señal no sea realmente periódica, y generalmente es malo. En este caso bastante malo, puesto que es incluso superior que el periodo en algún caso.
 
 
 13. Elige un paquete RTP de audio. Analiza el flujo de audio en Telephony -> RTP -> Stream Analysis.
@@ -176,8 +232,15 @@ INVITE, ACK, OPTIONS, BYE, CANCEL, NOTIFY, REFER, MESSAGE
 
 15. Identifica la trama donde se finaliza la conversación.
  ** ¿Qué método SIP se utiliza?
+
+BYE
+
  ** ¿En qué trama(s)?
+
+Bye request: 924, 925, 927, 933. Respuestas: 938-941
+
  ** ¿Por qué crees que se envía varias veces?
+
 
 
 16. Finalmente, se cierra la aplicación de VozIP.
