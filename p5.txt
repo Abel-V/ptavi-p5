@@ -169,37 +169,37 @@ El segundo Invite cuenta con el campo Proxy-Authorization añadido, cumpliendo a
 11. Una vez conectado, estudia el intercambio de tramas.
  ** ¿Qué protocolo(s) se utiliza(n)? ¿Para qué sirven estos protocolos?
 
-RTP y RTCP
+RTP y RTCP.
 
  ** ¿Cuál es el tamaño de paquete de los mismos?
 
-214 para RTP y 102 para RTCP
+214 para RTP y 102 para RTCP.
 
  ** ¿Se utilizan bits de padding?
 
-No, el campo padding tiene valor False (0)
+No, el campo padding tiene valor False (0).
 
  ** ¿Cuál es la periodicidad de los paquetes que se envían?
 
-Atendiendo al campo TimeStamp vemos que el primer byte de cada mensaje RTP se envía cada 160 ms (Aunque no se refleje luego en el tiempo real de los paquetes, dado que, como veremos después, existe jitter)
+Atendiendo al campo TimeStamp vemos que cada mensaje RTP se envía cada 160 bytes/paquete (Aunque no se refleje luego en el tiempo real de los paquetes, dado que, como veremos después, existe jitter).
+Contando que los mensajes G.711 se transmiten a 64 kb/s (64000 bits/seg), esto supone 1 bit cada 1.56*10⁻5 segundos.
 
 En los paquetes RTCP no observo una periodicidad fija.
 
  ** ¿Cuántos bits/segundo estamos enviando?
 
-Si consideramos el periodo anterior (0.000160 seg), y que 214 bytes = 1712 bits: 10700000 bits/seg
-
+Contando que los mensajes G.711 se transmiten a 64 kb/s (64000 bits/seg), enviamos 50 paquetes de 1280 bits (160 bytes) en 1 segundo (Teoricamente, sin tener en cuenta los retrasos).
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
 12. Vamos a ver más a fondo el intercambio RTP. En Telephony hay una opción RTP. Empecemos mirando los flujos RTP.
  ** ¿Cuántos flujos hay? ¿por qué?
 
-Hay 2, vídeo y audio; uno al puerto 5014 de paquetes H.261 (ITU-T video compression standard), y otro al 5010 de paquetes G.711 (estándar de la ITU-T para la codificación de audio)
+Hay 2, vídeo y audio; uno al puerto 5014 de paquetes H.261 (ITU-T video compression standard), y otro al 5010 de paquetes G.711 (estándar de la ITU-T para la codificación de audio).
 
  ** ¿Cuántos paquetes se pierden?
 
-0, ninguno
+0, ninguno.
 
  ** ¿Cuál es el valor máximo del delta? ¿Y qué es lo que significa el valor de delta?
 
@@ -209,7 +209,7 @@ Es la latencia, o tiempo que tarda de ir desde un punto origen hasta un punto de
 
  ** ¿Cuáles son los valores de jitter (medio y máximo)? ¿Qué quiere decir eso? ¿Estamos ante una conversación de calidad?
 
-V. Medio: 153.24 y 42.50
+V. Medio: 153.24 y 42.50 ms
 V. máximo: 183.10 y 119.64 ms
 
 "Jitter is the deviation from true periodicity of a presumed periodic signal"
@@ -218,11 +218,28 @@ Lo que significa que es lo que provoca que la señal no sea realmente periódica
 
 13. Elige un paquete RTP de audio. Analiza el flujo de audio en Telephony -> RTP -> Stream Analysis.
  ** ¿Cuánto valen el delta y el jitter para el primer paquete que ha llegado?
+
+0 ambos.
+
  ** ¿Podemos saber si éste es el primer paquete que nos han enviado?
+
+Si, al ser cero los valores anteriores podemos suponerlo, ya que se empezará a contar a partir de él.
+
  ** Los valores de jitter son menores de 10ms hasta un paquete dado. ¿Cuál?
+
+Hasta el 247
+
  ** ¿A qué se debe el cambio tan brusco del jitter?
+
+A un retardo (latencia) especialmente grande
+
  ** ¿Es comparable este cambio con el tiempo desde la recepción del paquete anterior? ¿Por qué?
+
+Sí, hay un salto grande de tiempo entre el mensaje anterior y el 247
+
  ** ¿Cuál es la dependencia entre el tiempo transcurrido desde el paquete anterior y el valor de jitter?
+
+Directa, pues el jitter lo que indica es la desviación con respecto al periodo, así que cuanto más aumente la latencia, también lo hará el jitter
 
 
 14. En Telephony selecciona el menú VoIP calls. Verás que se lista la llamada de voz IP capturada en una ventana emergente. Selecciona esa llamada y pulsa el botón Graph.
