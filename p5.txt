@@ -206,14 +206,14 @@ Hay 2, vídeo y audio; uno al puerto 5014 de paquetes H.261 (ITU-T video compres
 
  ** ¿Cuál es el valor máximo del delta? ¿Y qué es lo que significa el valor de delta?
 
-1290.48 y 1290.44 ms
+1290.48 ms (Vídeo) y 1290.44 ms (Audio)
 
 Es la latencia, o tiempo que tarda de ir desde un punto origen hasta un punto destino.
 
  ** ¿Cuáles son los valores de jitter (medio y máximo)? ¿Qué quiere decir eso? ¿Estamos ante una conversación de calidad?
 
-V. Medio: 153.24 y 42.50 ms
-V. máximo: 183.10 y 119.64 ms
+V. Medio: 153.24 ms (Vídeo) y 42.50 ms (Audio)
+V. máximo: 183.10 ms (Vídeo) y 119.64 ms (Audio)
 
 "Jitter is the deviation from true periodicity of a presumed periodic signal"
 Lo que significa que es lo que provoca que la señal no sea realmente periódica, y generalmente es malo. En este caso bastante malo, puesto que su valor medio es incluso superior que el periodo.
@@ -230,28 +230,33 @@ Si, al ser cero los valores anteriores podemos suponerlo, ya que se empezará a 
 
  ** Los valores de jitter son menores de 10ms hasta un paquete dado. ¿Cuál?
 
-Hasta el 247
+Hasta el 247.
 
  ** ¿A qué se debe el cambio tan brusco del jitter?
 
-A un retardo (latencia) especialmente grande
+A un retardo (latencia) especialmente grande.
 
  ** ¿Es comparable este cambio con el tiempo desde la recepción del paquete anterior? ¿Por qué?
 
-Sí, hay un salto grande de tiempo entre el mensaje anterior y el 247
+Sí, hay un salto grande de tiempo entre el mensaje anterior y el 247.
 
  ** ¿Cuál es la dependencia entre el tiempo transcurrido desde el paquete anterior y el valor de jitter?
 
-Directa, pues el jitter lo que indica es la desviación con respecto al periodo, así que cuanto más aumente la latencia, también lo hará el jitter
+Directa, pues el jitter lo que indica es la desviación con respecto al periodo, así que cuanto más aumente la latencia, también lo hará el jitter.
 
 
 14. En Telephony selecciona el menú VoIP calls. Verás que se lista la llamada de voz IP capturada en una ventana emergente. Selecciona esa llamada y pulsa el botón Graph.
  ** ¿Cuánto dura la conversación?
 
-
+24,80 segundos
 
  ** ¿Cuáles son sus SSRC? ¿Por qué hay varios SSRCs? ¿Hay CSRCs?
 
+Hay 2, uno para cada flujo.
+Vídeo: 0x43306582
+Audio: 0xBF4AFD37
+
+No hay CSRCs porque ambos flujos no han sido mezclados.
 
 15. Identifica la trama donde se finaliza la conversación.
  ** ¿Qué método SIP se utiliza?
@@ -264,12 +269,20 @@ Bye request: 924, 925, 927, 933. Respuestas: 938-941
 
  ** ¿Por qué crees que se envía varias veces?
 
-
+Como comportamiento estándar, en vez de enviar un solo BYE y esperar que nos llegue su OK, sabiendo que pueden perderse cualquiera de esos paquetes o retrasarse, enviamos 4 seguidos (número razonable para tampoco saturar la línea) de forma que nos aseguramos de que tanto alguno de ellos como alguno de sus OK lleguen, pudiendo así finalizar la conexión de la manera más rapida posible.
 
 16. Finalmente, se cierra la aplicación de VozIP.
  ** ¿Por qué aparece una instrucción SIP del tipo REGISTER?
+
+Porque le mandamos al servidor de Ekiga un Register con el Expires a 0, para que nos borre de la sesión.
+
  ** ¿En qué trama sucede esto?
+
+En la 950.
+
  ** ¿En qué se diferencia con la instrucción que se utilizó con anterioridad (al principio de la sesión)?
+
+En el campo Expires puesto a 0, por lo explicado anteriormente.
 
 
 
