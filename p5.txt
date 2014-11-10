@@ -181,14 +181,17 @@ No, el campo padding tiene valor False (0).
 
  ** ¿Cuál es la periodicidad de los paquetes que se envían?
 
-Atendiendo al campo TimeStamp vemos que cada mensaje RTP se envía cada 160 bytes/paquete (Aunque no se refleje luego en el tiempo real de los paquetes, dado que, como veremos después, existe jitter).
-Contando que los mensajes G.711 se transmiten a 64 kb/s (64000 bits/seg), esto supone 1 bit cada 1.56*10⁻5 segundos.
+Atendiendo al campo TimeStamp vemos que cada mensaje RTP se envía cada 160 bytes/paquete.
+Contando que los mensajes G.711 se transmiten a 64 kb/s (64000 bits/seg), esto supone un periodo de 1 bit cada 1.56*10⁻5 segundos.
+También supone que enviamos 50 paquetes de 1280 bits (160 bytes) en 1 segundo, por lo tanto, obtenemos que el periodo (tiempo por paquete) es de: 1/50 = 0.02 segundos = 20 ms
+
+(Aunque no se refleje luego en el tiempo real de los paquetes, dado que, como veremos después, existe jitter).
 
 En los paquetes RTCP no observo una periodicidad fija.
 
  ** ¿Cuántos bits/segundo estamos enviando?
 
-Contando que los mensajes G.711 se transmiten a 64 kb/s (64000 bits/seg), enviamos 50 paquetes de 1280 bits (160 bytes) en 1 segundo (Teoricamente, sin tener en cuenta los retrasos).
+64000 bits/seg), ó 50 paquetes por segundo (Teoricamente, sin tener en cuenta los retrasos).
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
@@ -213,7 +216,7 @@ V. Medio: 153.24 y 42.50 ms
 V. máximo: 183.10 y 119.64 ms
 
 "Jitter is the deviation from true periodicity of a presumed periodic signal"
-Lo que significa que es lo que provoca que la señal no sea realmente periódica, y generalmente es malo. En este caso bastante malo, puesto que es incluso superior que el periodo en algún caso.
+Lo que significa que es lo que provoca que la señal no sea realmente periódica, y generalmente es malo. En este caso bastante malo, puesto que su valor medio es incluso superior que el periodo.
 
 
 13. Elige un paquete RTP de audio. Analiza el flujo de audio en Telephony -> RTP -> Stream Analysis.
@@ -244,6 +247,9 @@ Directa, pues el jitter lo que indica es la desviación con respecto al periodo,
 
 14. En Telephony selecciona el menú VoIP calls. Verás que se lista la llamada de voz IP capturada en una ventana emergente. Selecciona esa llamada y pulsa el botón Graph.
  ** ¿Cuánto dura la conversación?
+
+
+
  ** ¿Cuáles son sus SSRC? ¿Por qué hay varios SSRCs? ¿Hay CSRCs?
 
 
