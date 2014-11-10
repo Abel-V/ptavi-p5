@@ -328,7 +328,6 @@ Sí, en el menú Telephony, RTP, Show All Streams, seleccionar un flujo y pulsar
 Ofrece servicio de Audio únicamente.
 
 
-
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
 19. Filtra por los paquetes SIP de la captura y guarda únicamente los paquetes SIP como sip.libpcap. Abre el fichero guardado para cerciorarte de que lo has hecho bien. Deberás guardarlo en un archivo de nombre p5.libpcap y añadirlo al repositorio.
